@@ -79,38 +79,26 @@ class UserRoleGetView:
             for key, value in reqs[0:1]:
                 if value is not None:
                     conditions.append(f"{key} LIKE %s")
-                    params.append(f"%{value}%")
-            for key, value in reqs[1:2]:
+                    params.append(f"{value}%")
+            for key, value in reqs[1:4]:
                 if value is not None:
                     conditions.append(f"{key} = %s")
                     params.append(value)
-            times = reqs[4:-2]
-            for tr in zip_longest(times[::2], times[1::2]):
-                ts, te = tr
-                tsz, tez, tso, teo = ts[0], te[0], ts[1], te[1]
-                if tso is not None and teo is not None:
-                    conditions.append(f"%s <= {TIME_FIELD_MAP[tsz]} <= %s")
-                    params.extend([tso, teo])
-                    continue
-                if tso is not None:
-                    conditions.append(f"{TIME_FIELD_MAP[tsz]} >= %s")
-                    params.append(tso)
-                    continue
-                if teo is not None:
-                    conditions.append(f"{TIME_FIELD_MAP[tez]} <= %s")
-                    params.append(teo)
+            for key, value in reqs[4:-2]:
+                if value is not None:
+                    conditions.append(f"{key} >= %s and {key} <= %s")
+                    params.extend(value.split(', '))
                     continue
             numbers = [r[1] for r in reqs[-2:]]
             params.extend([(numbers[0] - 1) * numbers[1], numbers[1]])
             conditionStr = f" WHERE {" AND ".join(conditions)} limit %s, %s" if conditions else " limit %s, %s"
-            roles = await UserRolesGetModel.userRolesGet(conditionStr, params)
+            roles = await UserRoleGetModel.userRolesGet(conditionStr, params)
             total = len(roles)
-            if total == 0:
-                return await JsonResponse(HTTP_204_NO_CONTENT, "没有符合条件的数据!", {'total': 0, 'roles': ()})
-            else:
+            if total != 0:
                 for role in roles:
-                    pathIds = role.get("path_ids")
-                    role['path_ids'] = loads(pathIds) if pathIds else pathIds
-                return await JsonResponse(HTTP_200_OK, "用户角色列表查询成功!", {'total': total, 'roles': roles})
+                    role['role_status'] = True if role['role_status'] == 1 else False
+                return await JsonResponse(HTTP_200_OK, "用户角色查询成功", {'total': total, 'roles': roles})
+            else:
+                return await JsonResponse(HTTP_204_NO_CONTENT, "没有符合条件的数据", None)
         except Exception:
-            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色列表查询失败!', format_exc())
+            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色查询失败', format_exc())

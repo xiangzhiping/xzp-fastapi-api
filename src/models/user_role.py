@@ -31,12 +31,12 @@ class UserRoleUpdateModel:
         await amo.execute(f"UPDATE user_role SET {conditionStr}, operator=%s, update_time=%s WHERE role_id=%s", params)
 
 
-class UserRolesGetModel:
+class UserRoleGetModel:
     @staticmethod
     async def userRolesGet(conditionStr, params):
         sql = (
-            "SELECT role_id, role_name, role_level, paths, CONVERT(operator, CHAR) AS operator, data_status, "
-            "DATE_FORMAT(create_time, '%%y-%%m-%%d %%H:%%i:%%s') AS create_time, "
-            "DATE_FORMAT(update_time, '%%y-%%m-%%d %%H:%%i:%%s') AS update_time, "
-            "DATE_FORMAT(delete_time, '%%y-%%m-%%d %%H:%%i:%%s') AS delete_time FROM user_role")
+            "SELECT role_id, role_name, role_level, paths, CONVERT(operator_id, CHAR) AS operator_id, role_status, "
+            "DATE_FORMAT(create_datetime, '%%y-%%m-%%d %%H:%%i:%%s') AS create_time, "
+            "DATE_FORMAT(update_datetime, '%%y-%%m-%%d %%H:%%i:%%s') AS update_time, "
+            "DATE_FORMAT(delete_datetime, '%%y-%%m-%%d %%H:%%i:%%s') AS delete_time FROM user_role")
         return await amo.fetchall(sql + conditionStr, params)
