@@ -83,6 +83,4 @@ class SystemResponseProcessor(BaseHTTPMiddleware):
 middlewares = (
     UserIdentityVerification,
     SystemResponseProcessor,
-    # 跨域中间件
-    CORSMiddleware
 )
