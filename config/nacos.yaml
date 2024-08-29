@@ -1,0 +1,5 @@
+host: localhost
+port: 8848
+username: nacos
+password: 633124
+namespace: 58d14d60-1b8d-4a76-96c2-9fc0f7e40f64
