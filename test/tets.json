@@ -1,0 +1,44 @@
+{
+  "200": {
+    "description": "\u8bf7\u6c42\u6210\u529f\u54cd\u5e94\u63cf\u8ff0",
+    "content": {
+      "application/json": {
+        "schema": {
+          "code": 200,
+          "msg": "\u767b\u5f55\u6210\u529f",
+          "data": "token\u4ee4\u724c"
+        }
+      }
+    }
+  },
+  "422": {
+    "description": "\u8bf7\u6c42\u53c2\u6570\u9519\u8bef\u54cd\u5e94\u63cf\u8ff0",
+    "content": {
+      "application/json": {
+        "example": {
+          "code": 422,
+          "msg": "\u8bf7\u6c42\u53c2\u6570\u9519\u8bef",
+          "data": [
+            {
+              "loc": "\u9519\u8bef\u53c2\u6570",
+              "msg": "\u9519\u8bef\u4fe1\u606f",
+              "type": "\u9519\u8bef\u7c7b\u578b"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "500": {
+    "description": "\u8bf7\u6c42\u9519\u8bef\u54cd\u5e94\u63cf\u8ff0",
+    "content": {
+      "application/json": {
+        "example": {
+          "code": 500,
+          "msg": "\u767b\u5f55\u9519\u8bef",
+          "data": "\u9519\u8bef\u539f\u56e0\u6216\u5f02\u5e38\u5806\u6808"
+        }
+      }
+    }
+  }
+}

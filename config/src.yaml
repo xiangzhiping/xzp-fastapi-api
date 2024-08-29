@@ -1,0 +1,77 @@
+dev:
+  dbms:
+    mysql:
+      host: 127.0.0.1
+      port: 3306
+      username: xzp_dev_mysql_username
+      password: xzp_dev_mysql_password
+      database: xzp_dev_mysql
+      min_size: 1
+      max_size: 100
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      username: xzp_dev_mongodb_username
+      password: xzp_dev_mongodb_password
+      database: xzp_dev_mongodb
+      min_size: 1
+      max_size: 100
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: xzp_dev_redis_password
+      min_size: 10
+      max_size: 100
+  email:
+    smtp_server: smtp.qq.com
+    smtp_port: 465
+    sender_email: 3264633124@qq.com
+    password: dqmfrlfhqbrzdagj
+test:
+  dbms:
+    mysql:
+      host: 127.0.0.1
+      port: 3306
+      username: xzp_test_mysql_username
+      password: xzp_test_mysql_password
+      database: xzp_test_mysql
+      min_size: 1
+      max_size: 100
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      username: xzp_test_mongodb_username
+      password: xzp_test_mongodb_password
+      database: xzp_test_mongodb
+      min_size: 1
+      max_size: 100
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: xzp_test_redis_password
+      min_size: 10
+      max_size: 100
+prd:
+  dbms:
+    mysql:
+      host: 127.0.0.1
+      port: 3306
+      username: xzp_prd_mysql_username
+      password: xzp_prd_mysql_password
+      database: xzp_prd_mysql
+      min_size: 1
+      max_size: 100
+    mongodb:
+      host: 127.0.0.1
+      port: 27017
+      username: xzp_prd_mongodb_username
+      password: xzp_prd_mongodb_password
+      database: xzp_prd_mongodb
+      min_size: 1
+      max_size: 100
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      password: xzp_prd_redis_password
+      min_size: 10
+      max_size: 100
