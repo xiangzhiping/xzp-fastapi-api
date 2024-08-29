@@ -99,7 +99,7 @@ class UserRoleGetView:
                     role['role_status'] = True if role['role_status'] == 1 else False
                 return await JsonResponse(HTTP_200_OK, "用户角色查询成功", {'total': total, 'roles': roles})
             else:
-                return await JsonResponse(HTTP_204_NO_CONTENT, "没有符合条件的数据", None)
+                return await JsonResponse(HTTP_204_NO_CONTENT, "没有符合条件的数据", {'total': 0, 'roles': []})
         except Exception:
             raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色查询失败', format_exc())
 
@@ -114,7 +114,7 @@ class UserRoleMenuGetView:
                     {'label': '普通用户', 'value': 0},
                     {'label': '专业管理员', 'value': 2},
                 ],
-                'role_status': [
+                'role_states': [
                     {'label': '全部', 'value': None},
                     {'label': '启用', 'value': True},
                     {'label': '禁用', 'value': False}
