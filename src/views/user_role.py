@@ -102,3 +102,24 @@ class UserRoleGetView:
                 return await JsonResponse(HTTP_204_NO_CONTENT, "没有符合条件的数据", None)
         except Exception:
             raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色查询失败', format_exc())
+
+
+class UserRoleMenuGetView:
+    async def __call__(self):
+        try:
+            menu = {
+                'role_levels': [
+                    {'label': '全部', 'value': None},
+                    {'label': '超级管理员', 'value': 1},
+                    {'label': '普通用户', 'value': 0},
+                    {'label': '专业管理员', 'value': 2},
+                ],
+                'role_status': [
+                    {'label': '全部', 'value': None},
+                    {'label': '启用', 'value': True},
+                    {'label': '禁用', 'value': False}
+                ]
+            }
+            return await JsonResponse(HTTP_200_OK, "用户角色枚举查询成功", menu)
+        except Exception:
+            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色枚举查询失败', format_exc())

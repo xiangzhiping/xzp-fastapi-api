@@ -71,3 +71,8 @@ class UserRoleGetReqBody(BaseModel):
 @router.get(path='/query', name='用户角色查询', responses=UserRoleGetExample)
 async def UserRoleGetController(rb=Depends(UserRoleGetReqBody)):
     return await UserRoleGetView(rb)()
+
+
+@router.get(path='/menu/query', name='用户角色枚举查询', responses=UserRoleGetExample)
+async def UserRoleMenuGetController():
+    return await UserRoleMenuGetView()()
