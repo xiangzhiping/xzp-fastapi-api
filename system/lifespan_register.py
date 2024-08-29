@@ -15,14 +15,14 @@ from socket import gethostname, gethostbyname
 
 
 async def UserRoleMapGet():
-    sql = "SELECT role_id AS roleId, role_name AS roleName, role_level AS roleLevel, api_paths AS apiPaths FROM user_role"
+    sql = "SELECT role_id AS roleId, role_name AS roleName, role_level AS roleLevel, paths AS apiPaths FROM user_role"
     GLOBAL_STORE["role"] = {
         role["roleId"]: {"apiPaths": loads(role["apiPaths"]) if role["apiPaths"] else None} for role in
         await amo.fetchall(sql)}
 
 
 async def NoAuthorizationAccessiblePathsGet():
-    sql = "SELECT api_paths AS apiPaths FROM sys_api WHERE login_access = 0"
+    sql = "SELECT paths AS apiPaths FROM sys_api WHERE auth_access = 0"
     paths = ["/xzp/user/login", "/xzp/sys/captcha/get", "/xzp/sys/swagger/json/get"] + GLOBAL_STORE['SWAGGER_UI_PATHS']
     GLOBAL_STORE['NO_AUTHORIZATION_ACCESSIBLE_PATHS'].extend(paths)
     # GLOBAL_SHARE_RESOURCE["noCheckPaths"] = [path["apiPaths"] for path in await db.fetchall(sql)]
