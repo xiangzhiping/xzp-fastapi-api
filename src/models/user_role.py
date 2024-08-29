@@ -5,14 +5,14 @@ from system.orms.aio_mysql_orm import amo
 class UserRoleCreateModel:
     @staticmethod
     async def userRoleCreate(roleName, roleLevel, apiPaths, operator):
-        sql = "insert into user_role (role_name, role_level, paths, operator) values (%s, %s, %s, %s)"
+        sql = "insert into user_role (role_name, role_level, paths, operator_id) values (%s, %s, %s, %s)"
         await amo.execute(sql, (roleName, roleLevel, apiPaths, operator))
 
 
 class UserRoleDeleteModel:
     @staticmethod
     async def userRoleLogicalDelete(operator, roleId):
-        sql = "UPDATE user_role SET data_status=%s, operator=%s, delete_time=%s WHERE role_id=%s"
+        sql = "UPDATE user_role SET role_status=%s, operator_id=%s, delete_datetime=%s WHERE role_id=%s"
         await amo.execute(sql, (0, operator, datetime.now(), roleId))
 
     @staticmethod
@@ -23,7 +23,7 @@ class UserRoleDeleteModel:
 class UserRoleUpdateModel:
     @staticmethod
     async def userRoleGet(roleId):
-        sql = "SELECT role_name, role_level, paths FROM user_role WHERE data_status = 1 AND role_id=%s"
+        sql = "SELECT role_name, role_level, paths FROM user_role WHERE role_status = 1 AND role_id=%s"
         return await amo.fetchone(sql, roleId)
 
     @staticmethod

@@ -9,7 +9,7 @@ CREATE TABLE login_log
     login_msg       VARCHAR(255)                         NOT NULL COMMENT '登录消息',
     login_data      TEXT                                 NULL COMMENT '登录数据',
     log_status      TINYINT(1) DEFAULT 1                 NOT NULL COMMENT '日志状态（有效 1，无效 0）',
-    operator        VARCHAR(100)                         NOT NULL COMMENT '操作者',
+    operator_id     BIGINT                               NOT NULL COMMENT '操作者个人ID',
     create_datetime DATETIME   DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建日期时间',
     update_datetime DATETIME                             NULL COMMENT '更新日期时间',
     delete_datetime DATETIME                             NULL COMMENT '删除日期时间'
@@ -35,7 +35,7 @@ CREATE TABLE sys_api
     tag_path        VARCHAR(50)                                    NULL COMMENT '标签路径',
     auth_access     TINYINT(1) DEFAULT 1                           NOT NULL COMMENT '身份验证访问（需要 1，不需要 0）',
     api_status      TINYINT(1) DEFAULT 1                           NOT NULL COMMENT '接口状态（有效 1，无效 0）',
-    operator        BIGINT                                         NOT NULL COMMENT '操作者',
+    operator_id     BIGINT                                         NOT NULL COMMENT '操作者个人ID',
     create_datetime DATETIME   DEFAULT CURRENT_TIMESTAMP           NOT NULL COMMENT '创建日期时间',
     update_datetime DATETIME                                       NULL COMMENT '更新日期时间',
     delete_datetime DATETIME                                       NULL COMMENT '删除日期时间',
@@ -64,7 +64,7 @@ CREATE TABLE user
     login_datetime  DATETIME                             NULL COMMENT '登录日期时间',
     logout_datetime DATETIME                             NULL COMMENT '登出日期时间',
     user_status     TINYINT(1) DEFAULT 1                 NOT NULL COMMENT '用户状态（有效 1，无效 0）',
-    operator        BIGINT                               NOT NULL COMMENT '操作者',
+    operator_id     BIGINT                               NOT NULL COMMENT '操作者个人ID',
     create_datetime DATETIME   DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建日期时间',
     update_datetime DATETIME                             NULL COMMENT '更新日期时间',
     delete_datetime DATETIME                             NULL COMMENT '删除日期时间',
@@ -79,12 +79,12 @@ ALTER TABLE user
 -- 用户权限表
 CREATE TABLE user_permission
 (
-    user_id           BIGINT                               NOT NULL COMMENT '用户id'
+    user_id           BIGINT                               NOT NULL COMMENT '用户ID'
         PRIMARY KEY,
-    role_id           INT                                  NOT NULL COMMENT '角色id',
-    paths             JSON                                 NULL COMMENT '接口路径id列表',
+    role_id           INT                                  NOT NULL COMMENT '角色ID',
+    paths             JSON                                 NULL COMMENT '接口路径ID列表',
     permission_status TINYINT(1) DEFAULT 1                 NOT NULL COMMENT '权限状态（有效 1，无效 0）',
-    operator          BIGINT                               NOT NULL COMMENT '操作者',
+    operator_id       BIGINT                               NOT NULL COMMENT '操作者个人ID',
     create_datetime   DATETIME   DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建日期时间',
     update_datetime   DATETIME                             NULL COMMENT '更新日期时间',
     delete_datetime   DATETIME                             NULL COMMENT '删除日期时间'
@@ -106,7 +106,7 @@ CREATE TABLE user_role
     role_level      TINYINT(1)                           NOT NULL COMMENT '角色级别（超级管理员 1， 普通用户 0， 专业管理员 [其他数字]）',
     paths           JSON                                 NULL COMMENT '接口路径id列表',
     role_status     TINYINT(1) DEFAULT 1                 NOT NULL COMMENT '角色状态（有效 1，无效 0）',
-    operator        BIGINT                               NOT NULL COMMENT '操作者',
+    operator_id     BIGINT                               NOT NULL COMMENT '操作者个人ID',
     create_datetime DATETIME   DEFAULT CURRENT_TIMESTAMP NOT NULL COMMENT '创建日期时间',
     update_datetime DATETIME                             NULL COMMENT '更新日期时间',
     delete_datetime DATETIME                             NULL COMMENT '删除日期时间',

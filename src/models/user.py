@@ -114,7 +114,7 @@ class UserQueryModel:
     async def userQuery(conditionStr, params):
         sql = (
             "SELECT CONVERT(user_id, CHAR) AS user_id, nickname, phone, email, avatar_key, login_status, "
-            "account_status, user_status, CONVERT(operator, CHAR) AS operator, "
+            "account_status, user_status, CONVERT(operator_id, CHAR) AS operator_id, "
             "DATE_FORMAT(login_datetime, '%%y-%%m-%%d %%H:%%i:%%s') AS login_datetime, "
             "DATE_FORMAT(logout_datetime, '%%y-%%m-%%d %%H:%%i:%%s') AS logout_datetime, "
             "DATE_FORMAT(create_datetime, '%%y-%%m-%%d %%H:%%i:%%s') AS create_datetime, "
