@@ -1,6 +1,7 @@
 import pymysql
 import random
 import asyncio
+import string
 from utils.snowflake_id_generator import SnowflakeIdGenerator
 from datetime import datetime, timedelta
 from utils.pure_digital_uuid_generator import PureDigitalUuidGenerator
@@ -17,22 +18,31 @@ connection = pymysql.connect(
     cursorclass=pymysql.cursors.DictCursor
 )
 
+chinese_prefixes = ['超', '无敌', '梦幻', '极夜', '极光', '幻影', '星辰', '银河', '闪电', '火焰']
+chinese_suffixes = ['侠', '王', '仙', '尊', '神', '风', '云', '雷', '电', '龙']
+chinese_middle_words = ['小', '大', '梦', '星', '灵', '影', '幻', '极', '流', '闪']
 
-def generate_chinese_nickname(length_range=(2, 10)):
-    # 汉字的 Unicode 范围
-    start_code_point = 0x4E00  # CJK Unified Ideographs
-    end_code_point = 0x9FA5  # CJK Unified Ideographs
-    length = random.randint(*length_range)
-    return ''.join(chr(random.randint(start_code_point, end_code_point)) for _ in range(length))
+
+async def generate_chinese_nickname():
+    prefix = random.choice(chinese_prefixes)
+    suffix = random.choice(chinese_suffixes)
+    username = f"{prefix}{suffix}"
+    if len(username) <= 11:
+        random_chars = ''.join(random.choices(string.ascii_lowercase + string.digits, k=min(14 - len(username), 3)))
+        username += random_chars
+    return username[:15]
 
 
 async def main():
     try:
         with connection.cursor() as cursor:
+            operator_id = 0
             for i in range(100000):
                 try:
                     user_id = await sig.nextid()
-                    nickname = generate_chinese_nickname()
+                    if i == 0:
+                        operator_id = user_id
+                    nickname = await generate_chinese_nickname()
                     phone = f'{random.randint(10000000000, 99999999999)}'
                     email = f'{random.randint(1000000000, 9999999999)}@qq.com'
                     password = '$2b$12$M2wR6ftyEtO6ha4g8HSEcOXqcRq7xzPQnpTV6o7TRa8flRfE3T1iG'
@@ -43,7 +53,7 @@ async def main():
                     logout_datetime = None if login_status == 1 else login_datetime - timedelta(
                         hours=random.randint(1, 24))
                     user_status = 1
-                    operator = 7225449773631762432
+                    operator = operator_id
                     create_datetime = datetime.now()
                     update_datetime = datetime.now() if random.choice([0, 1]) == 1 else None
                     delete_datetime = None

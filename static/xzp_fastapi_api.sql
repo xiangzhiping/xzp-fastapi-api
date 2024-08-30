@@ -58,7 +58,7 @@ CREATE TABLE user
     phone           VARCHAR(15)                          NULL COMMENT '电话',
     email           VARCHAR(50)                          NULL COMMENT '邮箱',
     password        VARCHAR(60)                          NOT NULL COMMENT '用户密码',
-    avatar_key      VARCHAR(100)                         NULL COMMENT '头像（头像图片oss唯一key）',
+    avatar_key      VARCHAR(100)                         NULL COMMENT '头像（个人头像唯一key）',
     login_status    TINYINT(1) DEFAULT 0                 NOT NULL COMMENT '登录状态（在线 1，离线 0）',
     account_status  TINYINT(1) DEFAULT 1                 NOT NULL COMMENT '账号状态（有效 1，无效 0）',
     login_datetime  DATETIME                             NULL COMMENT '登录日期时间',
@@ -72,9 +72,17 @@ CREATE TABLE user
     CONSTRAINT user_pk_2 UNIQUE (email),
     CONSTRAINT user_pk_3 UNIQUE (avatar_key)
 ) COMMENT '用户表';
-
+CREATE INDEX user_login_datetime_index ON user (create_datetime);
 ALTER TABLE user
     ENGINE = InnoDB;
+
+insert into xzp_dev_mysql.user (user_id, nickname, phone, email, password, avatar_key, login_status, account_status,
+                                login_datetime, logout_datetime, user_status, operator_id, create_datetime,
+                                update_datetime, delete_datetime)
+values (7235163934879406592, '系统默认超级管理员', '17820512394', '3264633124@qq.com',
+        '$2b$12$M2wR6ftyEtO6ha4g8HSEcOXqcRq7xzPQnpTV6o7TRa8flRfE3T1iG', 'avatars/3833739814745750935736639922512.png',
+        0, 1, '2024-04-19 13:58:25', '2024-04-19 06:58:25', 1, 7235163934879406592, '2024-08-30 13:58:25',
+        '2024-08-30 13:58:25', null);
 
 -- 用户权限表
 CREATE TABLE user_permission

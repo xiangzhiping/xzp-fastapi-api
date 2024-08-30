@@ -100,7 +100,7 @@ class PersonalInfoGetView:
         try:
             personal = await PersonalInfoGet.personalInfoGet(self.req.state.user.get("user_id"))
             if personal:
-                return await JsonResponse(HTTP_200_OK, "个人信息获取成功!", personal)
+                return await JsonResponse(HTTP_200_OK, "个人信息查询成功!", personal)
             else:
                 return await JsonResponse(HTTP_204_NO_CONTENT, "个人信息不存在!", None)
         except Exception:

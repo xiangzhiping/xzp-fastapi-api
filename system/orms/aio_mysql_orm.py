@@ -22,7 +22,7 @@ class AioMysqlOrm:
     def __init__(self, cps: dict = None):
         super().__init__()
         self.cps = cps
-        self.aioMysqlOrmTransactional = self.__AioMysqlOrmTransactional()
+        self.aioMysqlOrmTransactional = self.__amo_transactional()
 
     async def __resTypeGet(self, resType: dict | tuple):
         if resType == dict:
@@ -67,8 +67,8 @@ class AioMysqlOrm:
             self._pool.close()
             await self._pool.wait_closed()
 
-    async def fetchall(self, sql: str, params: any = None,
-                       resType: dict | tuple = dict, conn=None) -> tuple[dict] | tuple[tuple]:
+    async def query_all(self, sql: str, params: any = None,
+                        resType: dict | tuple = dict, conn=None) -> tuple[dict] | tuple[tuple]:
         """原生sql查询返回全部结果"""
         conn = conn if conn else await self.get_conn()
         async with conn.cursor(await self.__resTypeGet(resType)) as cursor:
@@ -77,8 +77,8 @@ class AioMysqlOrm:
             create_task(mlp.processor(cursor.mogrify(sql, params), startTime))
             return await cursor.fetchall()
 
-    async def fetchmany(self, sql: str, params: any = None,
-                        resType: dict | tuple = dict, resNum: int = 10, conn=None) -> tuple[dict] | tuple[tuple]:
+    async def query_many(self, sql: str, params: any = None,
+                         resType: dict | tuple = dict, resNum: int = 10, conn=None) -> tuple[dict] | tuple[tuple]:
         """原生sql查询返回多条结果(可自定义返回条数,默认返回10条)"""
         conn = conn if conn else await self.get_conn()
         async with conn.cursor(await self.__resTypeGet(resType)) as cursor:
@@ -87,7 +87,7 @@ class AioMysqlOrm:
             create_task(mlp.processor(cursor.mogrify(sql, params), startTime))
             return await cursor.fetchmany(resNum)
 
-    async def fetchone(self, sql: str, params: any = None, resType: dict | tuple = dict, conn=None) -> dict | tuple:
+    async def query_one(self, sql: str, params: any = None, resType: dict | tuple = dict, conn=None) -> dict | tuple:
         """原生sql查询返回单条结果"""
         conn = conn if conn else await self.get_conn()
         async with conn.cursor(await self.__resTypeGet(resType)) as cursor:
@@ -96,17 +96,19 @@ class AioMysqlOrm:
             create_task(mlp.processor(cursor.mogrify(sql, params), startTime))
             return await cursor.fetchone()
 
-    async def execute(self, sql: str, params: any = None, conn=None) -> int:
+    async def execute_one(self, sql: str, params: any = None, conn=None) -> int:
         """原生sql执行，并根据SQL类型返回相应信息"""
+        global con
         try:
             if conn:
+                con = conn
                 async with conn.cursor() as cursor:
                     startTime = perf_counter()
                     await cursor.execute(sql, params)
                     create_task(mlp.processor(cursor.mogrify(sql, params), startTime))
                     return await self.__lastRowIdOrRowCountGet(sql, cursor)
             else:
-                conn = await self.get_conn()
+                conn = con = await self.get_conn()
                 await conn.begin()
                 async with conn.cursor() as cursor:
                     startTime = perf_counter()
@@ -115,10 +117,10 @@ class AioMysqlOrm:
                     create_task(mlp.processor(cursor.mogrify(sql, params), startTime))
                     return await self.__lastRowIdOrRowCountGet(sql, cursor)
         except Exception as err:
-            await conn.rollback()
+            await con.rollback()
             raise err
 
-    async def executemany(self, sql: str, params: any = None, conn=None) -> int:
+    async def execute_many(self, sql: str, params: any = None, conn=None) -> int:
         """原生sql批量执行，并根据SQL类型返回相应信息"""
         try:
             if conn:
@@ -140,18 +142,18 @@ class AioMysqlOrm:
             await conn.rollback()
             raise err
 
-    def __AioMysqlOrmTransactional(self):
+    def __amo_transactional(self):
         def decorator(func):
             @wraps(func)
             async def wrapper(*args, **kwargs):
-                async with self.__AioMysqlOrmTransaction(self) as conn:
+                async with self.__AmoTransaction(self) as conn:
                     return await func(*args, conn=conn, **kwargs)
 
             return wrapper
 
         return decorator
 
-    class __AioMysqlOrmTransaction:
+    class __AmoTransaction:
         def __init__(self, amo):
             self.conn = None
             self.amo = amo
