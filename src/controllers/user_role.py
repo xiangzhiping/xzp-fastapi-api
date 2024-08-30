@@ -50,7 +50,7 @@ class UserRoleUpdateReqBody(BaseModel):
         return fields
 
 
-@router.patch(path='/update', name='用户角色修改', responses=UserRoleUpdateExample)
+@router.put(path='/update', name='用户角色修改', responses=UserRoleUpdateExample)
 async def UserRoleUpdateController(rb: UserRoleUpdateReqBody, req: Request):
     return await UserRoleUpdateView(rb, req)()
 
