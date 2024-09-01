@@ -14,12 +14,13 @@ class UserRoleCreateView:
 
     async def __call__(self):
         try:
-            roleName, roleLevel, pathIds = dict(self.rb).values()
-            pathIds, userId = dumps(apiPaths) if pathIds else None, self.req.state.user.get("user_id")
+            roleName, roleLevel, apiTabs = dict(self.rb).values()
+            print(roleName, roleLevel, apiTabs)
+            pathIds, userId = dumps(apiTabs) if apiTabs else None, self.req.state.user.get("user_id")
             await UserRoleCreateModel.userRoleCreate(roleName, roleLevel, pathIds, userId)
-            return await JsonResponse(HTTP_200_OK, '用户角色创建成功!', None)
+            return await JsonResponse(HTTP_200_OK, '用户角色创建成功', None)
         except Exception:
-            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色创建失败!', format_exc())
+            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色创建失败', format_exc())
 
 
 class UserRoleDeleteView:
@@ -109,15 +110,21 @@ class UserRoleMenuGetView:
         try:
             menu = {
                 'role_levels': [
-                    {'label': '全部', 'value': None},
                     {'label': '超级管理员', 'value': 1},
                     {'label': '普通用户', 'value': 0},
-                    {'label': '专业管理员', 'value': 2},
+                    {'label': '管理员', 'value': 2},
                 ],
                 'role_states': [
                     {'label': '全部', 'value': None},
                     {'label': '启用', 'value': True},
                     {'label': '禁用', 'value': False}
+                ],
+                'api_tabs': [
+                    {'key': '用户管理', 'enabled': False, 'value': []},
+                    {'key': '用户角色管理', 'enabled': False, 'value': []},
+                    {'key': '用户权限管理', 'enabled': False, 'value': []},
+                    {'key': '系统管理', 'enabled': False, 'value': []},
+                    {'key': '系统接口管理', 'enabled': False, 'value': []},
                 ]
             }
             return await JsonResponse(HTTP_200_OK, "用户角色枚举查询成功", menu)

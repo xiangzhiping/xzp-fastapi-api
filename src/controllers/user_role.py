@@ -12,7 +12,7 @@ class UserRoleCreateReqBody(BaseModel):
     """用户角色新增请求体"""
     roleName: str = Field(..., title="角色名称", alias='role_name')
     roleLevel: int = Field(..., title="角色等级", alias='role_level')
-    pathIds: list[int] | None = Field(None, title="path路径id列表", alias='path_ids')
+    apiTabs: list[dict] | None = Field(None, title="接口标签列表", alias='api_tabs')
 
 
 @router.post(path='/create', name='用户角色新增', responses=UserRoleCreateExample)

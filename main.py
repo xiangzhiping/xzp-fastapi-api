@@ -37,7 +37,7 @@ def application():
 
     app.openapi = OpenapiDefaultResponseRemover(app)
 
-    SNOWFLAKE_ID_GENERATORS.append(SnowflakeIdGenerator(*DataCenterIdWorkerIdProcessIdGet()))
+    # SNOWFLAKE_ID_GENERATORS.append(SnowflakeIdGenerator(*DataCenterIdWorkerIdProcessIdGet()))
 
     return app
 

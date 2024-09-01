@@ -89,8 +89,8 @@ class AioMysqlOrm:
 
     async def query_one(self, sql: str, params: any = None, resType: dict | tuple = dict, conn=None) -> dict | tuple:
         """原生sql查询返回单条结果"""
-        conn = conn if conn else await self.get_conn()
-        async with conn.cursor(await self.__resTypeGet(resType)) as cursor:
+        con = conn if conn else await self.get_conn()
+        async with con.cursor(await self.__resTypeGet(resType)) as cursor:
             startTime = perf_counter()
             await cursor.execute(sql, params)
             create_task(mlp.processor(cursor.mogrify(sql, params), startTime))
