@@ -57,6 +57,7 @@ class AioMysqlOrm:
 
     async def get_conn(self):
         """从连接池获取连接"""
+        await self.__createConnPool()
         async with self._pool.acquire() as conn:
             return conn
 
@@ -69,7 +70,6 @@ class AioMysqlOrm:
     async def query_all(self, sql: str, params: any = None,
                         resType: dict | tuple = dict, conn=None) -> tuple[dict] | tuple[tuple]:
         """原生sql查询返回全部结果"""
-        await self.__createConnPool()
         conn = conn if conn else await self.get_conn()
         async with conn.cursor(await self.__resTypeGet(resType)) as cursor:
             startTime = perf_counter()

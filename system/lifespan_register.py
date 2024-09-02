@@ -25,6 +25,7 @@ async def NoAuthorizationAccessiblePathsGet():
     paths = [
                 "/xzp/user/login/account/password",
                 "/xzp/user/login/captcha",
+                "/xzp/sys/identity/captcha/send",
                 "/xzp/sys/image/captcha/id/get",
                 "/xzp/sys/image/captcha/image/get",
                 "/xzp/sys/swagger/json/get"
