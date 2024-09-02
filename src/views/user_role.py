@@ -30,15 +30,10 @@ class UserRoleDeleteView:
 
     async def __call__(self):
         try:
-            roleId, type = dict(self.rb).values()
-            if type == 0:
-                await UserRoleDeleteModel.userRoleLogicalDelete(self.req.state.user.get("user_id"), roleId)
-                return await JsonResponse(HTTP_200_OK, '用户角色删除成功!', None)
-            else:
-                await UserRoleDeleteModel.userRolePhysicalDelete(roleId)
-                return await JsonResponse(HTTP_200_OK, '用户角色删除成功!', None)
+            await UserRoleDeleteModel.userRoleLogicalDelete(self.req.state.user.get("user_id"), self.rb.roleId)
+            return await JsonResponse(HTTP_200_OK, '用户角色删除成功', None)
         except Exception:
-            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色删除失败!', format_exc())
+            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户角色删除失败', format_exc())
 
 
 class UserRoleUpdateView:
@@ -90,9 +85,11 @@ class UserRoleGetView:
                     conditions.append(f"{key} >= %s and {key} <= %s")
                     params.extend(value.split(', '))
                     continue
+            conditions.append("role_status = %s"), params.append(1)
             numbers = [r[1] for r in reqs[-2:]]
             params.extend([(numbers[0] - 1) * numbers[1], numbers[1]])
-            conditionStr = f" WHERE {" AND ".join(conditions)} limit %s, %s" if conditions else " limit %s, %s"
+            orderLimit = ' ORDER BY role_id DESC LIMIT %s, %s'
+            conditionStr = f" WHERE {" AND ".join(conditions)}{orderLimit}" if conditions else {orderLimit}
             roles = await UserRoleGetModel.userRolesGet(conditionStr, params)
             total = len(roles)
             if total != 0:

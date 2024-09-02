@@ -23,7 +23,6 @@ async def UserRoleCreateController(rb: UserRoleCreateReqBody, req: Request):
 class UserRoleDeleteReqBody(BaseModel):
     """用户角色删除请求体"""
     roleId: int = Field(..., title="角色id", alias='role_id')
-    type: Literal[0, 1] = Field(..., title="删除类型（物理删除 1， 逻辑删除 0）", alias='type')
 
 
 @router.delete(path='/delete', name='用户角色删除', responses=UserRoleDeleteExample)
