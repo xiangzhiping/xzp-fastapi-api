@@ -132,7 +132,7 @@ async def PhoneSmsSender(subject, body, receiver_email, src=None) -> bool:
 
 def ApplicationStartLog(app):
     """应用启动日志"""
-    time, title = f"{COLORS['cyan']}{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", f"{COLORS['green']}APP-START-LOG"
+    time, title = f"{COLORS['cyan']}{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", f"{COLORS['green']}APP-START-INFO"
     l, r, t, c = f"{COLORS['blue']}[", f"{COLORS['blue']}]", f"{COLORS['magenta']}-> ", f"{COLORS['magenta']}-"
     prefix = f"{l}{title}{r}{c}{l}{time}{r}{t}"
     print(f"{prefix}{COLORS['white']}app    title: {COLORS['yellow']}{app.title}")
