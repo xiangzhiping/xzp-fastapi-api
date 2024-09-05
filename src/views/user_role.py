@@ -111,11 +111,6 @@ class UserRoleMenuGetView:
                     {'label': '普通用户', 'value': 0},
                     {'label': '管理员', 'value': 2},
                 ],
-                'role_states': [
-                    {'label': '全部', 'value': None},
-                    {'label': '启用', 'value': True},
-                    {'label': '禁用', 'value': False}
-                ],
                 'api_tabs': [
                     {'key': '用户管理', 'enabled': False, 'value': []},
                     {'key': '用户角色管理', 'enabled': False, 'value': []},
