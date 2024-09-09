@@ -57,7 +57,7 @@ async def UserAccountCancellationController(rb: UserAccountCancellationReqBody, 
 class UserAccountStatusUpdateReqBody(BaseModel):
     """用户账号状态更新请求体"""
     userId: int = Field(..., title="需要更改的账号状态用户id", alias='user_id')
-    type: Literal[True, False] = Field(..., title="更新类型（有效 true， 无效 false）", alias='type')
+    state: bool = Field(..., title="更新类型（有效 true， 无效 false）", alias='state')
 
 
 @router.patch(path='/account/status/update', name='用户账号状态更改', responses=UserAccountStatusUpdateExample)
@@ -100,3 +100,8 @@ class UserQueryReqBody(BaseModel):
 @router.get(path='/query', name='用户查询', responses=UserQueryExample)
 async def UserQueryController(rb=Depends(UserQueryReqBody)):
     return await UserQueryView(rb)()
+
+
+@router.get(path='/menu/query', name='用户枚举查询', responses=UserQueryExample)
+async def UserMenuGetController():
+    return await UserMenuGetView()()

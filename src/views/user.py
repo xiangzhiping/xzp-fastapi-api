@@ -205,7 +205,8 @@ class UserAccountStatusUpdateView:
         try:
             userId, opeType, operator = list(dict(self.rb).values()) + [self.req.state.user.get("user_id")]
             if (await UserAccountStatusUpdateModel.userStatusGet(conn, userId)).get('user_status'):
-                await UserAccountStatusUpdateModel.userAccountStatusUpdate(conn, userId, opeType, operator, datetime.now())
+                await UserAccountStatusUpdateModel.userAccountStatusUpdate(conn, userId, opeType, operator,
+                                                                           datetime.now())
                 return await JsonResponse(HTTP_200_OK, f'用户账号{self.types[opeType]}成功!', None)
             else:
                 return await JsonResponse(HTTP_403_FORBIDDEN, f'用户已注销账号，此操作无效', None)
@@ -281,18 +282,38 @@ class UserQueryView:
                     conditions.append(f"{key} >= %s and {key} <= %s")
                     params.extend(value.split(', '))
                     continue
+            totalStr = f" WHERE {" AND ".join(conditions)}" if conditions else ""
+            total = await UserQueryModel.userTotalQuery(totalStr, params)
             numbers = [r[1] for r in reqs[-2:]]
             params.extend([(numbers[0] - 1) * numbers[1], numbers[1]])
-            conditionStr = f" WHERE {" AND ".join(conditions)} limit %s, %s" if conditions else " limit %s, %s"
-            users = await UserQueryModel.userQuery(conditionStr, params)
-            total = len(users)
-            if total != 0:
+            users = await UserQueryModel.userQuery(f"{totalStr} limit %s, %s" if totalStr else " limit %s, %s", params)
+            if total[0] != 0:
                 for user in users:
                     user['login_status'] = True if user.get("login_status") == 1 else False
                     user["account_status"] = True if user.get("account_status") == 1 else False
                     user['user_status'] = True if user.get("user_status") == 1 else False
-                return await JsonResponse(HTTP_200_OK, "用户列表查询成功!", {'total': total, 'users': users})
+                return await JsonResponse(HTTP_200_OK, "用户列表查询成功!", {'total': total[0], 'users': users})
             else:
                 return await JsonResponse(HTTP_204_NO_CONTENT, "没有符合条件的数据!", {'total': 0, 'users': ()})
         except Exception:
             raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户列表查询失败!', format_exc())
+
+
+class UserMenuGetView:
+    async def __call__(self):
+        try:
+            menu = {
+                'login_states': [
+                    {'label': '全部', 'value': None},
+                    {'label': '在线', 'value': True},
+                    {'label': '离线', 'value': False},
+                ],
+                'account_states': [
+                    {'label': '全部', 'value': None},
+                    {'label': '有效', 'value': True},
+                    {'label': '无效', 'value': False},
+                ]
+            }
+            return await JsonResponse(HTTP_200_OK, "用户枚举查询成功", menu)
+        except Exception:
+            raise HttpException(HTTP_500_INTERNAL_SERVER_ERROR, '用户枚举查询失败', format_exc())

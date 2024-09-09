@@ -111,6 +111,11 @@ class UserLogoutModel:
 
 class UserQueryModel:
     @staticmethod
+    async def userTotalQuery(conditionStr, params):
+        sql = "SELECT COUNT(*) AS total FROM user"
+        return await amo.query_one(sql + conditionStr, params, resType=tuple)
+
+    @staticmethod
     async def userQuery(conditionStr, params):
         sql = (
             "SELECT CONVERT(user_id, CHAR) AS user_id, nickname, phone, email, avatar_key, login_status, "
